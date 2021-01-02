@@ -4,6 +4,7 @@ import os
 import time
 import datetime
 import requests
+from progress.bar import IncrementalBar
 
 # noinspection PyPep8Naming
 class Vresponse():
@@ -60,11 +61,10 @@ class Vresponse():
         test_list = []
         file_dict = {}
         info_file = []
-
+        bar = IncrementalBar('Photo download', max=number_for_save_photos)
         for photo in photos:
             sizes = photo['sizes']
             max_size = max(sizes, key=self.get_largest)['url']
-            print(max_size)
             like = photo['likes']['count']
             if like in test_list:
                 like_name = str(like) + str(now)[:-15]
@@ -78,9 +78,9 @@ class Vresponse():
             global_count = global_count + 1
             if global_count == self.number_for_save_photos:
                 break
-
             time.sleep(1)
             file_dict = {}
-
+            bar.next()
+        bar.finish()
         with open('data.json', 'w') as file:
             json.dump(info_file, file, indent=2)
