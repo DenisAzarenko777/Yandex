@@ -10,13 +10,15 @@ from progress.bar import IncrementalBar
 class Vresponse():
     """Main class for working with photos"""
 
-    def __init__(self, token: str) -> None:
+    def __init__(self, token: str, id: str) -> None:
         self.token = token
+        self.id = id
 
     def response(self):
         """The method that building first json-file-response.json """
         vkontakte = requests.get('https://api.vk.com/method/photos.get',
                                    params={
+                                       "owner_id": self.id,
                                        "access_token": self.token,
                                        "count": '1000',
                                        "album_id": "profile",
@@ -24,6 +26,7 @@ class Vresponse():
                                        "v": 5.122,
                                        "extended": 1,
                                    }).json()
+
         with open('response.json', 'w') as file:
             json.dump(vkontakte, file, indent=2, ensure_ascii=False)
 
